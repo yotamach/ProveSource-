@@ -1,0 +1,12 @@
+.users, .conversions{
+    padding: 15px 5px;
+}
+
+.select-user{
+    width: 100px;
+}
+
+.card{ 
+    padding: 15px 15px;
+    margin: 5px 0;
+}

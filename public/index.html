@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Code Interview App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+
+</head>
+
+<body ng-app="app" ng-controller="conversions">
+    <div class="row">
+        <div class="col-md-10 offset-md-2">
+            <h2>Conversions managers</h2>
+        </div>
+    </div>
+    <div class="row users">
+        <div class="card col-md-6 users-selections">
+            <h5>Please select user</h5>
+            <div class="form-group">
+                <select name="user" class="form-control" ng-model="currentUser">
+                    <option ng-repeat="user in users" ng-value="user">{{user.name}} ({{user.email}})</option>
+                </select>
+            </div>
+            <button class="btn btn-primary select-user" ng-click="select(currentUser)">Select</button>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Name: {{ selectedUser.name }}</h5>
+                    <p class="card-text">Age: {{ selectedUser.age }}</p>
+                    <p class="card-text">Email: {{ selectedUser.email }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card col-md-6 accounts-selections">
+            <h5>Please create account</h5>
+            <form novalidate class="account-form">
+                <div class="form-group">
+                    <label>Name: <input type="text" ng-model="account.name" class="form-control" /></label><br />
+                </div>
+                <div class="form-group">
+                    <label>E-mail: <input type="email" ng-model="account.email" class="form-control" /></label><br />
+                </div>
+                <div class="form-group">
+                    <label>Age: <input type="text" ng-model="account.age" class="form-control" /></label><br />
+                </div>
+                <input type="submit" class="btn btn-success" ng-click="createAccount(account)" value="Create" />
+                <hr />
+                <div class="alert alert-danger" role="alert" ng-if="userErrorMessage">
+                    <strong>Error: </strong>{{ errorMessage }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row conversions">
+        <div class="col-md-12">
+            <h4>Conversions</h4>
+        </div>
+        <div class="col-md-6 card">
+            <h5>Please create conversion</h5>
+            <form novalidate class="conversion-form">
+                <div class="form-group">
+                    <label>Name: <input type="text" ng-model="conversionName" class="form-control" /></label><br />
+                </div>
+                <input type="submit" class="btn btn-success" ng-click="createConversion(conversionName)" value="Create" />
+                <hr />
+                <div class="alert alert-danger" role="alert" ng-if="conversionsErrorMessage">
+                    <strong>Error: </strong>{{ conversionsErrorMessage }}
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 card">
+            <h5>Conversions list</h5>
+            <div class="alert alert-warning" role="alert" ng-if="conversions.length < 1">
+                <strong>Warning: </strong>There is no conversions for this user
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" ng-repeat="conversion in conversions">
+                    {{ conversion.name }}
+                  <button type="button" class="btn btn-outline-primary" ng-click="increaseConversion(conversion)">Increase</button>
+                  <span class="badge badge-primary badge-pill">{{ sumOfevents(conversion) }}</span>
+                </li>
+              </ul>
+        </div>
+        <div class="col-md-12">
+            <h5>Show sum of conversions by date range</h5>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Start date: <input type="date" ng-model="startDate" class="form-control" /></label>
+                <label>End date: <input type="date" ng-model="endDate" class="form-control" /></label>
+                <input type="submit" class="btn btn-outline-warning" ng-click="sumOfConversionsByUser(startDate,endDate)" value="Create" />
+            </div>
+            <div class="alert alert-info" ng-if="sumOfConversionsInSelectedPeriod > 0">
+                <strong>Sum of conversion in selected period is:</strong> {{sumOfConversionsInSelectedPeriod}}
+              </div>
+            <div class="alert alert-danger" role="alert" ng-if="dateRangeErrorMessage">
+                <strong>Error: </strong>{{ dateRangeErrorMessage }}
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap-tpls.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js">
+</script>
+<script src="../node_modules/moment/moment.js"></script>
+<script src="app.js"></script>
+
+</html>
