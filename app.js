@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 var cors = require('cors');
 
-mongoose.connect('mongodb://localhost:27017/codeTest', {
+mongoose.connect('mongodb://localhost:27017/codeTest3', {
 	autoReconnect: true,
 	reconnectTries: 60,
 	reconnectInterval: 10000
