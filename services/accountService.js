@@ -1,14 +1,14 @@
 const Account = require('../models/account/Account');
 
 module.exports = class AccountService {
-  constructor() {}
+    constructor() {}
 
-  getAccounts(cb) {
-     Account.find({},cb);
-  }
+    getAccounts() {
+        return Account.find({});
+    }
 
-  createAccount(email,name,age) {
-    const account = new Account({email, name, age});
-    return account.save();
-  }
+    async createAccount(email, name, age) {
+        const account = new Account({email, name, age});
+        return account.save();
+    }
 }

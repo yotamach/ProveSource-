@@ -1,10 +1,12 @@
 const AccountService = require('../../services/accountService');
 
 module.exports = async function(req, res, next) {
-	const accountService = new AccountService();
-	const {email, name, age} = req.body;
-	accountService.createAccount(email, name, age)
-	.then(resp => res.send({user: resp}))
-	.catch(err => res.status(500).json({error: err}));
-	
+	try {
+		const accountService = new AccountService();
+		const {email, name, age} = req.body;
+		const user = await accountService.createAccount(email, name, age);
+		return res.send({user});
+	} catch (err) {
+		return res.status(500).json({error: err.message});
+	}
 };

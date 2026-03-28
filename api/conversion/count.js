@@ -1,16 +1,22 @@
-var moment = require('moment');
+const moment = require('moment');
 const ConversionService = require('../../services/conversionService');
 
 module.exports = async function(req, res, next) {
-	const {name, userId} = req.body;
-	const conversionService = new ConversionService();
-	conversionService.countConversion(name, userId,(error, resp) =>
-	{
-		if(error)
-			return res.send({error: "conversion not found"});
-		resp.countByDate.hasOwnProperty(moment().format("YYYY-MM-DD")) ? resp.countByDate[moment().format("YYYY-MM-DD")]++ : resp.countByDate[moment().format("YYYY-MM-DD")] = 1;
-		conversionService.updateConversion(resp)
-		.then(resp => res.send({conversion: resp}))
-		.catch(error => res.send({error:' "conversion save was failed'}));
-	});
+	try {
+		const {name, userId} = req.body;
+		const conversionService = new ConversionService();
+		const conversion = await conversionService.countConversion(name, userId);
+		
+		if (!conversion) {
+			return res.status(404).json({error: "conversion not found"});
+		}
+		
+		const today = moment().format("YYYY-MM-DD");
+		conversion.countByDate[today] = (conversion.countByDate[today] || 0) + 1;
+		
+		const updatedConversion = await conversionService.updateConversion(conversion);
+		return res.send({conversion: updatedConversion});
+	} catch (error) {
+		return res.status(500).json({error: error.message});
+	}
 };

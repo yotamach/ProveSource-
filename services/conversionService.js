@@ -1,31 +1,34 @@
-var moment = require('moment');
+const moment = require('moment');
 const Conversion = require('../models/conversion/Conversion');
 
 module.exports = class ConversionService {
     constructor(){}
   
-  getConversions(userId) {
-      return Conversion.find({userId},(resp) => console.log(resp));
-   }resp
+    getConversions(userId) {
+        return Conversion.find({userId});
+    }
  
-   createConversion(name,userId) {
-    const conversion = new Conversion({
-      name,
-      userId,
-      countByDate: {[moment().format("YYYY-MM-DD")]: 1}
-    });
-    return conversion.save();
-   }
+    async createConversion(name, userId) {
+        const conversion = new Conversion({
+            name,
+            userId,
+            countByDate: {}
+        });
+        return conversion.save();
+    }
 
-   countConversion(name,userId,cb) {
-    return Conversion.findOne({
-      userId,
-      name
-    },cb);
-   }
+    countConversion(name, userId) {
+        return Conversion.findOne({
+            userId,
+            name
+        });
+    }
 
-   updateConversion(conversionToUpdate) {
-		const updatedConversion = new Conversion(conversionToUpdate);
-		return updatedConversion.save();
-   }
-  }
+    updateConversion(conversionToUpdate) {
+        return Conversion.findByIdAndUpdate(
+            conversionToUpdate._id,
+            { countByDate: conversionToUpdate.countByDate },
+            { new: true }
+        );
+    }
+}

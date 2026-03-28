@@ -1,19 +1,23 @@
-var moment = require('moment');
+const moment = require('moment');
 const ConversionService = require('../../services/conversionService');
 
 module.exports = async function(req, res, next) {
-	const {userId, startDate, endDate} = req.query;
-    const conversionService = new ConversionService();
-    conversionService.getConversions(userId)
-    .then(resp => { 
-        let sum = 0;
-        resp.forEach(item => {
-            Object.keys(item.countByDate).forEach(key => {
-                if(moment(key).isBetween(moment(startDate),moment(endDate)))
-                    sum += item.countByDate[key];
-            });
-        });
-        res.send({sum});
-    })
-	.catch(error => res.json({error}).status(500));
+	try {
+		const {userId, startDate, endDate} = req.query;
+		const conversionService = new ConversionService();
+		const conversions = await conversionService.getConversions(userId);
+		
+		let sum = 0;
+		conversions.forEach(item => {
+			Object.keys(item.countByDate).forEach(key => {
+				if(moment(key).isBetween(moment(startDate), moment(endDate), null, '[]')) {
+					sum += item.countByDate[key];
+				}
+			});
+		});
+		
+		return res.send({sum});
+	} catch (error) {
+		return res.status(500).json({error: error.message});
+	}
 };
